@@ -1,4 +1,3 @@
-This is similiar with radiuapp but include a cui table that I will develop gradually.
 Ready OUT-OF-THE-BOX to use packages bundle, with 4 services in docker-compose.yml configuration:
 1. freeradius server 3.2.7 as radius server.
 2. postgresql 17
