@@ -18,6 +18,11 @@ services:
     networks:
       custom_network:
         ipv4_address: 192.168.188.2
+    healthcheck:                   # Add this section
+      test: ["CMD-SHELL", "pg_isready -U radius"]  # Checks if PostgreSQL is ready
+      interval: 10s                # Check every 10 seconds
+      timeout: 5s                  # Timeout for each check
+      retries: 5                   # Retry up to 5 times before marking unhealthy
 
   radius:
     # environment:
