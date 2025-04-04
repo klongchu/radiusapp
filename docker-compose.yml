@@ -31,7 +31,8 @@ services:
       - ./radius_etc/_data/:/etc/freeradius:z
       - /etc/localtime:/etc/localtime:ro
     depends_on:
-      - database
+      database:
+        condition: service_healthy  # Waits until the database is healthy
     networks:
       custom_network:
         ipv4_address: 192.168.188.3
