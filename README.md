@@ -14,7 +14,7 @@ Usage :
 ```bash
 # Must run in bash shell because of hostip.sh need it (cant use sh shell).
 # Store the directory name in a variable
-project_name="radius_cui"
+project_name="radiusapp"
 target_dir=$project_name # you can change to any literal string as directory name
 
 # Check if the directory exists, and create it if it doesn't
