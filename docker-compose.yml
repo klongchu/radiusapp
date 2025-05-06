@@ -65,7 +65,7 @@ services:
   adminer:
     image: adminer:latest
     environment:
-      - ADMINER_DEFAULT_SERVER=192.168.188.2
+      - ADMINER_DEFAULT_SERVER=database
       # - TZ=${TZ} # Dynamically set timezone based on host
     ports:
       - "8082:8080"  # Adminer accessible at localhost:8081
