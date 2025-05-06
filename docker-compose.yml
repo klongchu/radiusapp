@@ -15,9 +15,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data:z
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      custom_network:
-        ipv4_address: 192.168.188.2
     healthcheck:                   # Add this section
       test: ["CMD-SHELL", "pg_isready -U radius"]  # Checks if PostgreSQL is ready
       interval: 10s                # Check every 10 seconds
@@ -38,9 +35,6 @@ services:
     depends_on:
       database:
         condition: service_healthy  # Waits until the database is healthy
-    networks:
-      custom_network:
-        ipv4_address: 192.168.188.3
     command: ["/usr/sbin/freeradius", "-X"]
 
   backend:
@@ -61,9 +55,6 @@ services:
       # TZ: ${TZ} # Dynamically set timezone based on host
     depends_on:
       - database           # Ensure database container starts first
-    networks:
-      custom_network:
-        ipv4_address: 192.168.188.4
     volumes:
       - /etc/localtime:/etc/localtime:ro
      # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
@@ -80,20 +71,17 @@ services:
       - "8082:8080"  # Adminer accessible at localhost:8081
     depends_on:
       - database
-    networks:
-      custom_network:
-        ipv4_address: 192.168.188.5
     volumes:
       - /etc/localtime:/etc/localtime:ro
 
-networks:
-  custom_network:
-    ipam:
-      config:
-        - subnet: 192.168.188.0/24
-  default:
-    external:
-      name: host
+# networks:
+#   custom_network:
+#     ipam:
+#       config:
+#         - subnet: 192.168.188.0/24
+#   default:
+#     external:
+#       name: host
 volumes:
   pgdata:
 #   - radius327:
