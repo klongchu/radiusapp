@@ -9,6 +9,7 @@ Requirement:
 2. *nix host environment with sudo or root access. Recommended fedora core os (FCOS).
 3. docker and docker-compose installed.
 4. bash,,sh not enough because must run a script, you can easily install bash for example if you use alpine linux.
+5. git must be installed.
    
 Usage :
 ```bash
