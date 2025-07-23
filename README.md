@@ -33,7 +33,7 @@ HOST_IP=$(bash ./backend/hostip.sh)
 export HOST_IP
 
 # build process
-docker-compose build --no-cache
+docker compose build --no-cache
 ###################################################
 # If you already do above you can also run below
 # so you dont need to git clone and build again
@@ -42,7 +42,7 @@ docker-compose build --no-cache
 docker rm -f $(docker ps -aq -f status=exited) >/dev/null 2>&1 || true
 docker network prune -f >/dev/null 2>&1 || true
 
-docker-compose up
+docker compose up
 true
 
 ```
