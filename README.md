@@ -30,7 +30,9 @@ fi
 
 # to get the variable needed set
 HOST_IP=$(bash ./backend/hostip.sh)
-export HOST_IP
+#export HOST_IP
+echo "HOST_IP=$HOST_IP" > ./.env
+
 
 # build process
 docker compose build --no-cache
