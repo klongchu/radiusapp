@@ -80,21 +80,22 @@ services:
     restart: always
     env_file:
       - ./.env.production
+
   radapi:
     build:
       context: .
       dockerfile: Dockerfile.api
     depends_on:
-      - mysql
+      - database
     command: >
       sh -c "uvicorn api:app --host 0.0.0.0 --port 8000"
     ports:
       - "8077:8000"
     environment:
-      - DB_HOST=172.16.220.15
+      - DB_HOST=database
       - DB_NAME=radius
       - DB_USER=radius
-      - DB_PASS=KlongchuPass
+      - DB_PASS=1234
 
 # networks:
 #   custom_network:

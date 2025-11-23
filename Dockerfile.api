@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.13.1
 # Working directory in the container
 WORKDIR /whatever
 # Requirements first! for cache performance

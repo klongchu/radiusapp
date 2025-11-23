@@ -1,10 +1,10 @@
 import os
 
 # Uncomment the appropriate line matching your DB-API 2.0 (PEP 249) enabled driver
-DB_DRIVER = "mysql.connector"
+#DB_DRIVER = "mysql.connector"
 # DB_DRIVER = "pymysql"
 # DB_DRIVER = "pymssql"
-# DB_DRIVER = "psycopg2"
+DB_DRIVER = "psycopg2"
 # DB_DRIVER = "sqllite3"
 # DB_DRIVER = "oracledb"
 # DB_DRIVER = "<DRIVER>"

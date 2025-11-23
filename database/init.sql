@@ -430,7 +430,7 @@ COPY public.cui (clientipaddress, callingstationid, username, cui, creationdate,
 --
 
 COPY public.nas (id, nasname, shortname, type, ports, secret, server, community, description) FROM stdin;
-1	0.0.0.0/0	all	other	\N	999	default	\N	\N
+1	0.0.0.0/0	all	other	\N	94y3k64jZw5J75h	default	\N	\N
 \.
 
 
