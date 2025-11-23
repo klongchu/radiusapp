@@ -15,15 +15,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data:z
       - /etc/localtime:/etc/localtime:ro
-    healthcheck:                   # Add this section
-      test: ["CMD-SHELL", "pg_isready -U radius"]  # Checks if PostgreSQL is ready
-      interval: 10s                # Check every 10 seconds
-      timeout: 5s                  # Timeout for each check
-      retries: 5                   # Retry up to 5 times before marking unhealthy
+    healthcheck: # Add this section
+      test: ["CMD-SHELL", "pg_isready -U radius"] # Checks if PostgreSQL is ready
+      interval: 10s # Check every 10 seconds
+      timeout: 5s # Timeout for each check
+      retries: 5 # Retry up to 5 times before marking unhealthy
 
   radius:
     # environment:
-      # - TZ=${TZ} # Dynamically set timezone based on host
+    # - TZ=${TZ} # Dynamically set timezone based on host
     image: freeradius/freeradius-server:3.2.7
     ports:
       - "1812:1812/udp"
@@ -34,30 +34,30 @@ services:
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       database:
-        condition: service_healthy  # Waits until the database is healthy
+        condition: service_healthy # Waits until the database is healthy
     command: ["/usr/sbin/freeradius", "-X"]
 
   backend:
     build:
       # images: radapp_nodejs
-      context: ./backend  # Directory containing your Node.js app and Dockerfile
-      args:
-        - HOST_IP=${HOST_IP}
+      context: ./backend # Directory containing your Node.js app and Dockerfile
+      # args:
+      #   - HOST_IP=${HOST_IP}
     ports:
-      - "5000:5000"       # Node.js app port exposed
+      - "5000:5000" # Node.js app port exposed
     environment:
-      DB_HOST: database   # Hostname for database service
-      DB_PORT: 5432       # PostgreSQL default port
-      DB_USER: radius     # Match the database environment variables
+      DB_HOST: database # Hostname for database service
+      DB_PORT: 5432 # PostgreSQL default port
+      DB_USER: radius # Match the database environment variables
       DB_PASSWORD: 1234
       DB_NAME: radius
-      HOST_IP: ${HOST_IP}
+      # HOST_IP: ${HOST_IP}
       # TZ: ${TZ} # Dynamically set timezone based on host
     depends_on:
-      - database           # Ensure database container starts first
+      - database # Ensure database container starts first
     volumes:
       - /etc/localtime:/etc/localtime:ro
-     # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
+      # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
     #   - ./backend/hostip.sh:/usr/local/bin/hostip.sh
     # command:
     #   - /bin/bash -c "source /usr/local/bin/hostip.sh"
@@ -68,11 +68,33 @@ services:
       - ADMINER_DEFAULT_SERVER=database
       # - TZ=${TZ} # Dynamically set timezone based on host
     ports:
-      - "8082:8080"  # Adminer accessible at localhost:8081
+      - "8082:8080" # Adminer accessible at localhost:8081
     depends_on:
       - database
     volumes:
       - /etc/localtime:/etc/localtime:ro
+  app:
+    image: klongchu/provider-connect:latest
+    ports:
+      - 40010:8080
+    restart: always
+    env_file:
+      - ./.env.production
+  radapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    depends_on:
+      - mysql
+    command: >
+      sh -c "uvicorn api:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8077:8000"
+    environment:
+      - DB_HOST=172.16.220.15
+      - DB_NAME=radius
+      - DB_USER=radius
+      - DB_PASS=KlongchuPass
 
 # networks:
 #   custom_network:

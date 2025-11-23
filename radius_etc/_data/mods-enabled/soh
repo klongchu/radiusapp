@@ -1,1 +1,4 @@
-../mods-available/soh
+# SoH module
+soh {
+	dhcp = yes
+}
