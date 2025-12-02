@@ -9,6 +9,7 @@ Requirement:
 2. *nix host environment with sudo or root access. Recommended fedora core os (FCOS).
 3. docker and docker-compose installed.
 4. bash,,sh not enough because must run a script, you can easily install bash for example if you use alpine linux.
+5. git must be installed.
    
 Usage :
 ```bash
@@ -29,10 +30,12 @@ fi
 
 # to get the variable needed set
 HOST_IP=$(bash ./backend/hostip.sh)
-export HOST_IP
+#export HOST_IP
+echo "HOST_IP=$HOST_IP" > ./.env
+
 
 # build process
-docker-compose build --no-cache
+docker compose build --no-cache
 ###################################################
 # If you already do above you can also run below
 # so you dont need to git clone and build again
@@ -41,7 +44,7 @@ docker-compose build --no-cache
 docker rm -f $(docker ps -aq -f status=exited) >/dev/null 2>&1 || true
 docker network prune -f >/dev/null 2>&1 || true
 
-docker-compose up
+docker compose up
 true
 
 ```
