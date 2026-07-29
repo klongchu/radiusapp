@@ -21,15 +21,13 @@ services:
       retries: 5 # Retry up to 5 times before marking unhealthy
 
   radius:
-    # environment:
-    # - TZ=${TZ} # Dynamically set timezone based on host
-    image: freeradius/freeradius-server:3.2.7
+    build:
+      context: ./radius_etc
     ports:
       - "1812:1812/udp"
       - "1813:1813/udp"
       - "3799:3799/udp"
     volumes:
-      - ./radius_etc/_data/:/etc/freeradius:z
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       database:
