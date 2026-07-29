@@ -1,5 +1,5 @@
-from dependencies import UserRepositoryDep, GroupRepositoryDep, NasRepositoryDep
-from fastapi import FastAPI, APIRouter, Response, HTTPException
+from dependencies import UserRepositoryDep, GroupRepositoryDep, NasRepositoryDep, verify_api_key
+from fastapi import FastAPI, APIRouter, Response, HTTPException, Depends
 from pydantic import BaseModel
 from pyfreeradius.models import User, Group, Nas
 from settings import API_URL
@@ -20,7 +20,7 @@ error_404 = {"model": RadAPIError, "description": "Item not found"}
 error_409 = {"model": RadAPIError, "description": "Item already exists"}
 
 # Our API router and routes
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(verify_api_key)])
 
 
 @router.get("/")

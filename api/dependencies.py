@@ -1,6 +1,10 @@
+import secrets
+
 from database import db_connect
-from fastapi import Depends
+from fastapi import Depends, HTTPException, Security
+from fastapi.security import APIKeyHeader
 from pyfreeradius.repositories import UserRepository, GroupRepository, NasRepository
+from settings import API_KEY
 from typing import Annotated
 
 #
@@ -49,3 +53,13 @@ def get_nas_repository(db_session=Depends(get_db_session)) -> NasRepository:
 UserRepositoryDep = Annotated[UserRepository, Depends(get_user_repository)]
 GroupRepositoryDep = Annotated[GroupRepository, Depends(get_group_repository)]
 NasRepositoryDep = Annotated[NasRepository, Depends(get_nas_repository)]
+
+
+# API routes also depend on a valid X-API-Key header
+
+_api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+
+def verify_api_key(key: str | None = Security(_api_key_header)):
+    if not key or not secrets.compare_digest(key, API_KEY):
+        raise HTTPException(401, "Invalid or missing API key")

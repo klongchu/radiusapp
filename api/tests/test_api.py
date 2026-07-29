@@ -1,7 +1,12 @@
+import os
+
+os.environ.setdefault("API_KEY", "test-api-key")
+
 from api import app
 from fastapi.testclient import TestClient
 
-client = TestClient(app)
+client = TestClient(app, headers={"X-API-Key": os.environ["API_KEY"]})
+unauthenticated_client = TestClient(app)
 
 # Test data
 
@@ -50,6 +55,14 @@ get_user = {
 get_nas = {"nasname": "5.5.5.5", "secret": "my-secret", "shortname": "my-nas"}
 
 # Tests
+
+
+def test_api_key_required():
+    response = unauthenticated_client.get("/")
+    assert response.status_code == 401
+
+    response = unauthenticated_client.get("/", headers={"X-API-Key": "wrong-key"})
+    assert response.status_code == 401
 
 
 def test_read_root():

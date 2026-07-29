@@ -31,3 +31,6 @@ PER_PAGE = 100
 # after a resource has been created (POST) as per RFC 7231
 # and the "Link" header field (pagination) as per RFC 8288
 API_URL = "http://localhost:8000"
+
+# Required in the X-API-Key header for every API request
+API_KEY = os.environ["API_KEY"]

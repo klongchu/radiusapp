@@ -23,7 +23,7 @@ services:
   radius:
     # environment:
     # - TZ=${TZ} # Dynamically set timezone based on host
-    image: freeradius/freeradius-server:3.2.10
+    image: freeradius/freeradius-server:3.2.7
     ports:
       - "1812:1812/udp"
       - "1813:1813/udp"
@@ -43,7 +43,7 @@ services:
       # args:
       #   - HOST_IP=${HOST_IP}
     ports:
-      - "5000:5000" # Node.js app port exposed
+      - "5008:5000" # Node.js app port exposed
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -86,6 +86,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASSWORD}
+      API_KEY: ${API_KEY:?API_KEY is required}
 
 # networks:
 #   custom_network:
