@@ -27,6 +27,12 @@ services:
       - "1812:1812/udp"
       - "1813:1813/udp"
       - "3799:3799/udp"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     volumes:
       - /etc/localtime:/etc/localtime:ro
     depends_on:

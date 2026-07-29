@@ -164,10 +164,10 @@ sql {
 
 	# Connection info:
 	#
-	server = "database"
-	port = 5432
-	login = "radius"
-	password = "1234"
+	server = "$ENV{DB_HOST}"
+	port = $ENV{DB_PORT}
+	login = "$ENV{DB_USER}"
+	password = "$ENV{DB_PASSWORD}"
 
 	# Connection info for Mongo
 	# Authentication Without SSL
@@ -182,7 +182,7 @@ sql {
 	# server = mongodb://<DERIVED USERNAME>@192.168.0.2:PORT/DATABASE?authSource=$external&ssl=true&authMechanism=MONGODB-X509
 
 	# Database table configuration for everything except Oracle
-	radius_db = "radius"
+	radius_db = "$ENV{DB_NAME}"
 
 	# If you are using Oracle then use this instead
 #	radius_db = "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SID=your_sid)))"
