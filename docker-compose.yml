@@ -6,17 +6,16 @@ services:
       # images: radapp_postgres
       context: ./database
     environment:
-      POSTGRES_USER: radius
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: radius
-      # TZ: ${TZ} # Dynamically set timezone based on host
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data:z
       - /etc/localtime:/etc/localtime:ro
     healthcheck: # Add this section
-      test: ["CMD-SHELL", "pg_isready -U radius"] # Checks if PostgreSQL is ready
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"] # Checks if PostgreSQL is ready
       interval: 10s # Check every 10 seconds
       timeout: 5s # Timeout for each check
       retries: 5 # Retry up to 5 times before marking unhealthy
@@ -24,7 +23,7 @@ services:
   radius:
     # environment:
     # - TZ=${TZ} # Dynamically set timezone based on host
-    image: freeradius/freeradius-server:3.2.7
+    image: freeradius/freeradius-server:3.2.10
     ports:
       - "1812:1812/udp"
       - "1813:1813/udp"
@@ -46,13 +45,12 @@ services:
     ports:
       - "5000:5000" # Node.js app port exposed
     environment:
-      DB_HOST: database # Hostname for database service
-      DB_PORT: 5432 # PostgreSQL default port
-      DB_USER: radius # Match the database environment variables
-      DB_PASSWORD: 1234
-      DB_NAME: radius
-      # HOST_IP: ${HOST_IP}
-      # TZ: ${TZ} # Dynamically set timezone based on host
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      HOST_IP: ${HOST_IP}
     depends_on:
       - database # Ensure database container starts first
     volumes:
@@ -73,18 +71,10 @@ services:
       - database
     volumes:
       - /etc/localtime:/etc/localtime:ro
-  app:
-    image: klongchu/provider-connect:latest
-    ports:
-      - 40010:8080
-    restart: always
-    env_file:
-      - ./.env.production
-
   radapi:
     build:
-      context: .
-      dockerfile: Dockerfile.api
+      # images: radapp_postgres
+      context: ./api
     depends_on:
       - database
     command: >
@@ -92,10 +82,10 @@ services:
     ports:
       - "8077:8000"
     environment:
-      - DB_HOST=database
-      - DB_NAME=radius
-      - DB_USER=radius
-      - DB_PASS=1234
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASSWORD}
 
 # networks:
 #   custom_network:
