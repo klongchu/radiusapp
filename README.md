@@ -27,7 +27,7 @@ target_dir=$project_name # เปลี่ยนเป็นชื่อ directo
 if [ ! -d "$target_dir" ]; then
     mkdir -p "$target_dir"
     cd "$target_dir" || exit 1
-    git clone https://github.com/lfsegoro/"$project_name".git .
+    git clone https://github.com/klongchu/"$project_name".git .
 else
     cd "$target_dir" || exit 1
     git pull # !!คำเตือน!! การทำแบบนี้จะเขียนทับเนื้อหาใน directory
