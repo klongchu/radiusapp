@@ -78,7 +78,7 @@
 #
 listen {
 	type = coa
-	ipaddr = 127.0.0.1
+	ipaddr = *
 	port = 3799
 	virtual_server = coa
 }

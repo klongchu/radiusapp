@@ -9,45 +9,53 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      TZ: ${TZ} # Dynamically set timezone based on host
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data:z
       - /etc/localtime:/etc/localtime:ro
-    healthcheck: # Add this section
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"] # Checks if PostgreSQL is ready
-      interval: 10s # Check every 10 seconds
-      timeout: 5s # Timeout for each check
-      retries: 5 # Retry up to 5 times before marking unhealthy
+    networks:
+      custom_network:
+        ipv4_address: 10.9.77.2
+    healthcheck:                   # Add this section
+      test: ["CMD-SHELL", "pg_isready -U radius"]  # Checks if PostgreSQL is ready
+      interval: 10s                # Check every 10 seconds
+      timeout: 5s                  # Timeout for each check
+      retries: 5                   # Retry up to 5 times before marking unhealthy
 
   radius:
     build:
       context: ./radius_etc
-    ports:
-      - "1812:1812/udp"
-      - "1813:1813/udp"
-      - "3799:3799/udp"
     environment:
+      TZ: ${TZ}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "1812:1812/udp"
+      - "1813:1813/udp"
+      - "3799:3799/udp"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       database:
-        condition: service_healthy # Waits until the database is healthy
+        condition: service_healthy
+    networks:
+      custom_network:
+        ipv4_address: 10.9.77.3
     command: ["/usr/sbin/freeradius", "-X"]
 
   backend:
     build:
       # images: radapp_nodejs
-      context: ./backend # Directory containing your Node.js app and Dockerfile
-      # args:
-      #   - HOST_IP=${HOST_IP}
+      context: ./backend  # Directory containing your Node.js app and Dockerfile
+      args:
+        - HOST_IP=${HOST_IP}
     ports:
-      - "5008:5000" # Node.js app port exposed
+      - "5010:5000"       # Node.js app port exposed
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -55,11 +63,15 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
       HOST_IP: ${HOST_IP}
+      # TZ: ${TZ} # Dynamically set timezone based on host
     depends_on:
-      - database # Ensure database container starts first
+      - database           # Ensure database container starts first
+    networks:
+      custom_network:
+        ipv4_address: 10.9.77.4
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
+     # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
     #   - ./backend/hostip.sh:/usr/local/bin/hostip.sh
     # command:
     #   - /bin/bash -c "source /usr/local/bin/hostip.sh"
@@ -70,14 +82,17 @@ services:
       - ADMINER_DEFAULT_SERVER=database
       # - TZ=${TZ} # Dynamically set timezone based on host
     ports:
-      - "8082:8080" # Adminer accessible at localhost:8081
+      - "8082:8080"  # Adminer accessible at localhost:8081
     depends_on:
       - database
+    networks:
+      custom_network:
+        ipv4_address: 10.9.77.5
     volumes:
       - /etc/localtime:/etc/localtime:ro
+
   radapi:
     build:
-      # images: radapp_postgres
       context: ./api
     depends_on:
       - database
@@ -91,15 +106,18 @@ services:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASSWORD}
       API_KEY: ${API_KEY:?API_KEY is required}
+    networks:
+      custom_network:
+        ipv4_address: 10.9.77.6
 
-# networks:
-#   custom_network:
-#     ipam:
-#       config:
-#         - subnet: 192.168.188.0/24
-#   default:
-#     external:
-#       name: host
+networks:
+  custom_network:
+    ipam:
+      config:
+        - subnet: 10.9.77.0/24
+  # default:
+  #   external:
+  #     name: host
 volumes:
   pgdata:
 #   - radius327:
