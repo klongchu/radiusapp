@@ -1,11 +1,10 @@
 # radiusapp
 
-ชุดแพ็กเกจพร้อมใช้งานทันที (OUT-OF-THE-BOX) โดยมี services ใน docker-compose.yml:
+ชุดแพ็กเกจพร้อมใช้งานทันที (OUT-OF-THE-BOX) โดยมี 3 services ใน docker-compose.yml:
 
 1. freeradius server เป็น radius server
 2. postgresql 17
-3. radapi (FastAPI REST API, เข้าถึงผ่าน: <http://host-ip:8077/docs>)
-4. adminer (<http://host-ip:8082>) เป็น UI ทั่วไปเพิ่มเติมสำหรับเข้าถึงฐานข้อมูลโดยตรง
+3. radapi (FastAPI REST API พร้อม OpenAPI docs ที่ <http://host-ip:8077/docs>)
 
 ## ความต้องการของระบบ
 
@@ -51,7 +50,7 @@ true
 ขั้นตอนถัดไป:
 
 1. ปล่อยให้สคริปต์ทำการ pull และติดตั้งโดยอัตโนมัติ
-2. เข้าใช้งานผ่าน UI: <http://host-ip:8077/docs> (radapi) หรือ <http://host-ip:8082> (adminer)
+2. เข้าใช้งานผ่าน API: <http://host-ip:8077/docs> (radapi OpenAPI docs)
 3. ทดสอบด้วย Ntradping หรือทดสอบตรงจาก NAS เช่น mikrotik
 
 รายละเอียดเพิ่มเติมสามารถดูได้ที่ docker-compose.yml หากต้องการดูรหัสผ่านหรือปรับแก้ค่าต่างๆ
@@ -71,4 +70,4 @@ true
 - อนุญาตทุก host/nas โดยดู secret ได้ที่ 1 entry ในตาราง `nas`
 - adminer สามารถเข้าถึงได้ทุกตาราง เลือก Postgresql, dbHost เป็น IP address, ส่วน username/password ดูได้ใน docker-compose.yml
 - ความแตกต่างเดียวจาก freeradius config ค่าเริ่มต้น คือปรับแก้เฉพาะ module `sql` ใน `/etc/freeradius/mods-enable`
-- ใช้ port หลายตัวทั้ง udp และ tcp ได้แก่ 1812, 1813, 3799, 5432/5434, 8077, 8082 ถ้าทำเรื่องแบบนี้บ่อยๆ จะได้เรียนรู้เรื่อง backend, frontend และ tcp/ip เพิ่มขึ้นเยอะ
+- ใช้ port หลายตัวทั้ง udp และ tcp ได้แก่ 1812, 1813, 3799, 5434, 8077 ถ้าทำเรื่องแบบนี้บ่อยๆ จะได้เรียนรู้เรื่อง backend, frontend และ tcp/ip เพิ่มขึ้นเยอะ
