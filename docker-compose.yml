@@ -1,4 +1,4 @@
-##version: '3.8'
+﻿##version: '3.8'
 # All composed well, this is milestone so I called i v0.2
 services:
   database:
@@ -14,7 +14,7 @@ services:
       - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data:z
-      - /etc/localtime:/etc/localtime:ro
+      - ./etc/localtime:/etc/localtime:ro
     networks:
       custom_network:
         ipv4_address: 10.9.77.2
@@ -39,7 +39,7 @@ services:
       - "1813:1813/udp"
       - "3799:3799/udp"
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+      - ./etc/localtime:/etc/localtime:ro
     depends_on:
       database:
         condition: service_healthy
@@ -70,7 +70,7 @@ services:
       custom_network:
         ipv4_address: 10.9.77.4
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+      - ./etc/localtime:/etc/localtime:ro
      # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
     #   - ./backend/hostip.sh:/usr/local/bin/hostip.sh
     # command:
