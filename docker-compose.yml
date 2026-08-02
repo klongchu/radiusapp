@@ -48,34 +48,6 @@ services:
         ipv4_address: 10.9.77.3
     command: ["/usr/sbin/freeradius", "-X"]
 
-  backend:
-    build:
-      # images: radapp_nodejs
-      context: ./backend  # Directory containing your Node.js app and Dockerfile
-      args:
-        - HOST_IP=${HOST_IP}
-    ports:
-      - "5010:5000"       # Node.js app port exposed
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
-      HOST_IP: ${HOST_IP}
-      # TZ: ${TZ} # Dynamically set timezone based on host
-    depends_on:
-      - database           # Ensure database container starts first
-    networks:
-      custom_network:
-        ipv4_address: 10.9.77.4
-    volumes:
-      - ./etc/localtime:/etc/localtime:ro
-     # - /var/lib/docker/volumes/ftpdata/_data/myapp/radiusapp_backend_persistent/:/app #temp for devel
-    #   - ./backend/hostip.sh:/usr/local/bin/hostip.sh
-    # command:
-    #   - /bin/bash -c "source /usr/local/bin/hostip.sh"
-
   adminer:
     image: adminer:latest
     environment:
